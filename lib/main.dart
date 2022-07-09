@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:login_mysql/screens/screens.dart';
-import 'package:provider/provider.dart';
 
 void main() => runApp( const MyApp());
 
@@ -17,7 +16,7 @@ class MyApp extends StatelessWidget {
       initialRoute: 'login',
       routes: {
         'login':(_) => const LoginScreen(),
-        'register': (_) =>  RegisterScreen(),
+        'register': (_) =>  const RegisterScreen(),
         'home': (_) =>  const HomeScreen(),
         
       },
