@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       routes: {
         'login':(_) => const LoginScreen(),
         'register': (_) =>  const RegisterScreen(),
-        'home': (_) =>  const HomeScreen(),
+        'home': (_) =>  const HomeScreen(uname: null,),
         
       },
       theme: ThemeData.light().copyWith(

@@ -1,9 +1,14 @@
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:login_mysql/providers/login_form_provider.dart';
+import 'package:login_mysql/screens/home_screen.dart';
 import 'package:login_mysql/ui/input_decorations.dart';
 import 'package:login_mysql/widgets/widgets.dart';
 import 'package:provider/provider.dart';
+
+import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -22,26 +27,29 @@ class LoginScreen extends StatelessWidget {
                     const SizedBox(height: 10),
                     Text('Login', style: Theme.of(context).textTheme.headline4),
                     const SizedBox(height: 30),
-
                     ChangeNotifierProvider(
                       create: (_) => LoginFormProvider(),
                       child: const _LoginForm(),
-                      )
-                  
+                    )
                   ],
                 ),
               ),
               const SizedBox(height: 50),
-
               TextButton(
-                onPressed: (() => Navigator.pushReplacementNamed(context, 'register')),
+                onPressed: (() =>
+                    Navigator.pushReplacementNamed(context, 'register')),
                 style: ButtonStyle(
-                  overlayColor: MaterialStateProperty.all(Colors.indigo.withOpacity(0.1)),
-                  shape: MaterialStateProperty.all(const StadiumBorder())
+                    overlayColor: MaterialStateProperty.all(
+                        Colors.indigo.withOpacity(0.1)),
+                    shape: MaterialStateProperty.all(const StadiumBorder())),
+                child: const Text(
+                  'Crear una nueva cuenta',
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold),
                 ),
-                child: const Text('Crear una nueva cuenta',style: TextStyle(fontSize: 20, color: Colors.white,fontWeight: FontWeight.bold),),
               ),
-              
               const SizedBox(height: 50),
             ],
           ),
@@ -51,12 +59,43 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-class _LoginForm extends StatelessWidget {
+class _LoginForm extends StatefulWidget {
   const _LoginForm({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  State<_LoginForm> createState() => _LoginFormState();
+}
 
+class _LoginFormState extends State<_LoginForm> {
+  bool _visible = false;
+
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+
+  String _errorMessage = '';
+
+  Future login() async {
+    var url = "http://192.168.0.77/login_mysql/login.php";
+    var response = await http.post(Uri.parse(url), body: {
+      'email': email.text,
+      'contraseña': password.text,
+    });
+    var data = await json.decode(json.encode(response.body));
+    if (data == 'Success') {
+      Navigator.pushReplacementNamed(context, 'home');
+    } else {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text('Email y/o contraseña incorrecto'),
+            );
+          });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final loginForm = Provider.of<LoginFormProvider>(context);
 
     // ignore: avoid_unnecessary_containers
@@ -67,13 +106,14 @@ class _LoginForm extends StatelessWidget {
         child: Column(
           children: [
             TextFormField(
+              controller: email,
               autocorrect: false,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecorations.authInputDecoration(
                   hintText: 'example@gmail.com',
                   labelText: 'Correo electrónico',
                   prefixIcon: Icons.alternate_email_rounded),
-                  onChanged: (value) => loginForm.email = value,
+              onChanged: (value) => loginForm.email = value,
               validator: (value) {
                 String pattern =
                     r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
@@ -86,6 +126,7 @@ class _LoginForm extends StatelessWidget {
             ),
             const SizedBox(height: 30),
             TextFormField(
+              controller: password,
               autocorrect: false,
               obscureText: true,
               keyboardType: TextInputType.emailAddress,
@@ -93,7 +134,7 @@ class _LoginForm extends StatelessWidget {
                   hintText: '*********',
                   labelText: 'Contraseña',
                   prefixIcon: Icons.lock_outline),
-                  onChanged: (value) => loginForm.password = value,
+              onChanged: (value) => loginForm.password = value,
               validator: (value) {
                 return (value != null && value.length >= 6)
                     ? null
@@ -102,20 +143,8 @@ class _LoginForm extends StatelessWidget {
             ),
             const SizedBox(height: 30),
             MaterialButton(
-              onPressed: loginForm.isLoading ? null : () async {
-
-                FocusScope.of(context).unfocus();
-
-                if (!loginForm.isValidForm() ) return;
-
-                loginForm.isLoading = true;
-
-                await Future.delayed(const Duration(seconds:2));
-
-                loginForm.isLoading = false;
-
-                // ignore: use_build_context_synchronously
-                Navigator.restorablePushReplacementNamed(context, 'home');
+              onPressed: () => {
+                if (loginForm.formKey.currentState!.validate()) {login()}
               },
               color: Colors.deepPurple,
               elevation: 0,
@@ -126,12 +155,8 @@ class _LoginForm extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
                   child: Text(
-                    loginForm.isLoading 
-                    ? 'Espere...' 
-                    : 'Iniciar sesión',
-                      style: const TextStyle(color: Colors.white)
-                      )
-                    ),
+                      loginForm.isLoading ? 'Espere...' : 'Iniciar sesión',
+                      style: const TextStyle(color: Colors.white))),
             )
           ],
         ),
