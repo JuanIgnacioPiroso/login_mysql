@@ -29,7 +29,7 @@ class LoginScreen extends StatelessWidget {
                     const SizedBox(height: 30),
                     ChangeNotifierProvider(
                       create: (_) => LoginFormProvider(),
-                      child: const _LoginForm(),
+                      child: _LoginForm(),
                     )
                   ],
                 ),
@@ -77,11 +77,11 @@ class _LoginFormState extends State<_LoginForm> {
   Future login() async {
     var url = "http://192.168.0.77/login_mysql/login.php";
     var response = await http.post(Uri.parse(url), body: {
-      'email': email.text,
-      'contraseña': password.text,
+      "email": email.text,
+      "contraseña": password.text,
     });
-    var data = await json.decode(json.encode(response.body));
-    if (data == 'Success') {
+    var data = json.encode(response.body);
+    if (data == "Success") {
       Navigator.pushReplacementNamed(context, 'home');
     } else {
       showDialog(
