@@ -18,6 +18,8 @@ class RegisterScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 250),
               CardContainer(
+                paddingHorizontal: 30,
+                paddingContainer: 20,
                 child: Column(
                   children: [
                     const SizedBox(height: 10),
@@ -33,13 +35,17 @@ class RegisterScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 50),
-              TextButton(
-                onPressed: (() => Navigator.pushReplacementNamed(context, 'login')),
-                style: ButtonStyle(
-                  overlayColor: MaterialStateProperty.all(Colors.indigo.withOpacity(0.1)),
-                  shape: MaterialStateProperty.all(const StadiumBorder())
+              CardContainer(
+                paddingHorizontal: 5,
+                paddingContainer: 5,
+                child: TextButton(
+                  onPressed: (() => Navigator.pushReplacementNamed(context, 'login')),
+                  style: ButtonStyle(
+                    overlayColor: MaterialStateProperty.all(Colors.black.withOpacity(0.1)),
+                    shape: MaterialStateProperty.all(const StadiumBorder())
+                  ),
+                  child: const Text('¿Ya tienes una cuenta?',style: TextStyle(fontSize: 24, color: Colors.black87),),
                 ),
-                child: const Text('¿Ya tienes una cuenta?',style: TextStyle(fontSize: 18, color: Colors.black87),),
               ),
               const SizedBox(height: 50),
             ],
@@ -116,7 +122,7 @@ class _LoginForm extends StatelessWidget {
                 // ignore: use_build_context_synchronously
                 Navigator.restorablePushReplacementNamed(context, 'home');
               },
-              color: Colors.deepPurple,
+              color: Colors.grey,
               elevation: 0,
               disabledColor: Colors.grey,
               shape: RoundedRectangleBorder(
@@ -128,7 +134,7 @@ class _LoginForm extends StatelessWidget {
                     loginForm.isLoading 
                     ? 'Espere...' 
                     : 'Crear cuenta',
-                      style: const TextStyle(color: Colors.white)
+                      style: const TextStyle(color: Colors.black,  fontSize: 17)
                       )
                     ),
             )

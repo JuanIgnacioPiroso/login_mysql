@@ -4,17 +4,20 @@ class CardContainer extends StatelessWidget {
 
   final Widget child;
 
+  final double paddingHorizontal;
+  final double paddingContainer;
 
-  const CardContainer({Key? key, required this.child}) : super(key: key);
+
+  const CardContainer({Key? key, required this.child, required this.paddingHorizontal, required this.paddingContainer}) : super(key: key);
 
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
+      padding:  EdgeInsets.symmetric(horizontal: paddingHorizontal),
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(paddingContainer),
         decoration: _createCardShape(),
         child: child,
       ),
@@ -23,7 +26,7 @@ class CardContainer extends StatelessWidget {
 
   BoxDecoration _createCardShape() => BoxDecoration(
 
-    color: Colors.white.withOpacity(0.8),
+    color: Colors.grey.shade300.withOpacity(0.9),
     borderRadius: BorderRadius.circular(25),
     boxShadow: const [
 

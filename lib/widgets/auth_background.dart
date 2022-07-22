@@ -20,7 +20,7 @@ class AuthBackground extends StatelessWidget {
 
           const BackgroundImage(),
 
-          const _HeaderIcon(),
+          // const _HeaderIcon(),
 
           child,
 
@@ -43,7 +43,7 @@ class BackgroundImage extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/background.jpeg'),
+          image: AssetImage('assets/background3.jpg'),
           fit: BoxFit.cover,
         ),
       ),
