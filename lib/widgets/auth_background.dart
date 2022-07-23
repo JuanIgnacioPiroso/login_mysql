@@ -52,6 +52,7 @@ class BackgroundImage extends StatelessWidget {
   }
 }
 
+// ignore: unused_element
 class _HeaderIcon extends StatelessWidget {
   const _HeaderIcon({
     Key? key,
